@@ -1,0 +1,6 @@
+{
+  "name": "ProspecAI - Briefing de Vendas B2B & Discovery",
+  "description": "Gerador de Sales Intelligence e briefings para reuniões de Discovery B2B, com diagnóstico de dores, quebra de objeções, emails SPIN e mensagens LinkedIn salvos em histórico local.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
