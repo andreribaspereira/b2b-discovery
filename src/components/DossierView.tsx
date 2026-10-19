@@ -18,6 +18,7 @@ import {
   TrendingDown
 } from 'lucide-react';
 import { BriefingReport } from '../types/briefing';
+import { exportBriefingToPdf } from '../utils/pdfExport';
 
 interface DossierViewProps {
   report: BriefingReport;
@@ -32,6 +33,7 @@ export const DossierView: React.FC<DossierViewProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<'all' | 'output1' | 'output2' | 'output3'>('all');
   const [copiedState, setCopiedState] = useState<{ [key: string]: boolean }>({});
+  const [isExportingPdf, setIsExportingPdf] = useState<boolean>(false);
 
   const handleCopy = (key: string, text: string) => {
     navigator.clipboard.writeText(text);
@@ -41,15 +43,15 @@ export const DossierView: React.FC<DossierViewProps> = ({
     }, 2000);
   };
 
-  const handleDownloadMarkdown = () => {
-    const blob = new Blob([report.rawMarkdown], { type: 'text/markdown;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `briefing_${report.inputs.leadName.toLowerCase().replace(/\s+/g, '_')}_${report.inputs.company.toLowerCase().replace(/[^a-z0-9]/g, '_')}.md`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
+  const handleDownloadPdf = () => {
+    try {
+      setIsExportingPdf(true);
+      exportBriefingToPdf(report);
+    } catch (err) {
+      console.error('Erro ao gerar PDF:', err);
+    } finally {
+      setIsExportingPdf(false);
+    }
   };
 
   const { output1, output2, output3, inputs } = report;
@@ -112,12 +114,13 @@ ${output2.corpoEmail}`;
             </button>
 
             <button
-              onClick={handleDownloadMarkdown}
-              className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium bg-slate-800 text-slate-200 hover:bg-slate-700 border border-slate-700 rounded-lg transition-colors cursor-pointer"
-              title="Baixar em formato Markdown (.md)"
+              onClick={handleDownloadPdf}
+              disabled={isExportingPdf}
+              className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium bg-slate-800 text-slate-200 hover:bg-slate-700 border border-slate-700 rounded-lg transition-colors cursor-pointer disabled:opacity-50"
+              title="Baixar dossiê executivo em PDF"
             >
-              <Download className="w-3.5 h-3.5" />
-              <span>Baixar .md</span>
+              <Download className="w-3.5 h-3.5 text-rose-400" />
+              <span>{isExportingPdf ? 'Gerando...' : 'Baixar PDF'}</span>
             </button>
 
             <button

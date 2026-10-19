@@ -11,9 +11,11 @@ import {
   Copy,
   Check,
   BookmarkX,
-  FileText
+  FileText,
+  FileDown
 } from 'lucide-react';
 import { BriefingReport } from '../types/briefing';
+import { exportBriefingToPdf } from '../utils/pdfExport';
 
 interface SavedBriefingsDrawerProps {
   isOpen: boolean;
@@ -154,6 +156,16 @@ export const SavedBriefingsDrawer: React.FC<SavedBriefingsDrawerProps> = ({
                     </span>
 
                     <div className="flex items-center gap-1">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          exportBriefingToPdf(b);
+                        }}
+                        className="p-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-200/60 rounded-md transition-colors cursor-pointer"
+                        title="Baixar dossiê em PDF"
+                      >
+                        <FileDown className="w-3.5 h-3.5 text-rose-500" />
+                      </button>
                       <button
                         onClick={(e) => handleCopyEmail(e, b)}
                         className="p-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-200/60 rounded-md transition-colors cursor-pointer"

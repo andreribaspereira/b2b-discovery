@@ -7,7 +7,8 @@ import { EmptyState } from './components/EmptyState';
 import { useBriefingStorage } from './hooks/useBriefingStorage';
 import { LeadInputs, BriefingReport } from './types/briefing';
 import { PresetScenario } from './data/presets';
-import { AlertCircle, CheckCircle2, BookmarkCheck } from 'lucide-react';
+import { exportBriefingToPdf } from './utils/pdfExport';
+import { AlertCircle, CheckCircle2, BookmarkCheck, FileDown } from 'lucide-react';
 
 const INITIAL_INPUTS: LeadInputs = {
   leadName: '',
@@ -221,16 +222,29 @@ export default function App() {
                       <span className="text-xs font-semibold text-indigo-700">
                         Abrir Dossiê Completo →
                       </span>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          deleteReport(b.id);
-                        }}
-                        className="text-xs text-slate-400 hover:text-red-600 transition-colors cursor-pointer"
-                        title="Excluir"
-                      >
-                        Excluir
-                      </button>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            exportBriefingToPdf(b);
+                          }}
+                          className="text-xs text-slate-500 hover:text-slate-900 flex items-center gap-1 transition-colors cursor-pointer"
+                          title="Baixar dossiê em PDF"
+                        >
+                          <FileDown className="w-3.5 h-3.5 text-rose-500" />
+                          <span>PDF</span>
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            deleteReport(b.id);
+                          }}
+                          className="text-xs text-slate-400 hover:text-red-600 transition-colors cursor-pointer"
+                          title="Excluir"
+                        >
+                          Excluir
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}
